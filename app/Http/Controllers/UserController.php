@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -13,6 +14,7 @@ class UserController extends Controller
         return view('user.config');
     }
 
+    //Control de actualizacion de datos
     public function update(Request $request)
     {
         //Conseguir el usuario identificado
@@ -45,7 +47,7 @@ class UserController extends Controller
         if ($image_path) {
 
             //Poner nombre unico
-            $image_path_name = time().$image_path->getClientOriginalName();
+            $image_path_name = time().\Auth::user()->id.date('m-d-y').'.jpg';
 
             //Guardar en la carpeta de storage
             Storage::disk('users')->put($image_path_name, File::get($image_path));
@@ -58,5 +60,12 @@ class UserController extends Controller
         $user->update();
 
         return redirect()->route('config')->with(['message'=>'Usuario actualizado correctamente']);
+    }
+
+    //Control para obtener imagenes de usuarios
+    public function getImage($filename)
+    {
+        $file = Storage::disk('users')->get($filename);
+        return response()->view($file, 200);
     }
 }
