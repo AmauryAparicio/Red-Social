@@ -33,11 +33,17 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                       
 
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        <li class="ml-auto navbar-brand w-25">
+                            <div class="ml-auto mr-0 avatar">
+                                @include('includes.avatar')
+                            </div>
+                        </li>
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
