@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function config()
     {
         return view('user.config');
@@ -47,7 +52,7 @@ class UserController extends Controller
         if ($image_path) {
 
             //Poner nombre unico
-            $image_path_name = time().\Auth::user()->id.date('m-d-y').'.jpg';
+            $image_path_name = time().$image_path->getClientOriginalName();
 
             //Guardar en la carpeta de storage
             Storage::disk('users')->put($image_path_name, File::get($image_path));
@@ -66,6 +71,6 @@ class UserController extends Controller
     public function getImage($filename)
     {
         $file = Storage::disk('users')->get($filename);
-        return response()->view($file, 200);
+        return new Response($file,200);
     }
 }
