@@ -18,12 +18,13 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/front.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route('home') }}">
                     Red Social
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -39,8 +40,13 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <li class="ml-auto navbar-brand w-25">
-                            <div class="ml-auto mr-0 w-50">
+                        <li class="nav-item ml-auto my-auto">
+                            <a href=" {{ route('image.create') }} " class="ml-auto nav-link">
+                                Subir imagen
+                            </a>
+                        </li>
+                        <li class="navbar-brand ml-0 mr-0 my-auto">
+                            <div class="text-right nav-img">
                                 @include('includes.avatar')
                             </div>
                         </li>
@@ -55,7 +61,7 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown my-auto">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
@@ -64,10 +70,6 @@
 
                                     <a class="dropdown-item" href="#">
                                         {{ __('Inicio') }}
-                                    </a>
-
-                                    <a class="dropdown-item" href="#">
-                                        {{ __('Subir imagen') }}
                                     </a>
 
                                     <a class="dropdown-item" href="#">
