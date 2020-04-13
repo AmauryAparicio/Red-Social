@@ -13,7 +13,7 @@
                             <div class="col-md-6">
                                 <input type="file" name="image_path" id="image_path" class="form-control-file" required>
                                 @if ($errors->has('image_path'))
-                                    <span class="ivalid-feedback" role="alert">
+                                    <span class="invalid-feedback" role="alert">
                                         <strong> {{ $errors->first('image_path') }} </strong>
                                     </span>
                                 @endif

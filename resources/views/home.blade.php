@@ -11,7 +11,7 @@
                     <div class="container-avatar">
                         @if ($image->user->image)
                         <img src=" {{ route('user.avatar', ['filename' => $image->user->image]) }} "
-                            class="img-fluid img-thumbnail rounded">
+                            class="img-fluid img-thumbnail rounded-circle">
                         @endif
                         <span class="h5"><strong>{{ $image->user->name . ' ' . $image->user->surname }} <span
                                     class="text-muted small">
