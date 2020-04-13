@@ -1,1 +1,15 @@
-.nav-img{width:50px;margin-left:10px}
+.nav-img,
+.pub_image img {
+  width: 50px;
+  margin-left: 10px;
+}
+
+.pagination {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+a:hover {
+  text-decoration: none;
+}

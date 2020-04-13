@@ -34,7 +34,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                       
+
 
                     </ul>
 
@@ -47,7 +47,9 @@
                         </li>
                         <li class="navbar-brand ml-0 mr-0 my-auto">
                             <div class="text-right nav-img">
-                                @include('includes.avatar')
+                                @if (\Auth::check())
+                                    @include('includes.avatar')
+                                @endif
                             </div>
                         </li>
                         <!-- Authentication Links -->
@@ -68,7 +70,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href=" {{ route('home') }} ">
                                         {{ __('Inicio') }}
                                     </a>
 
@@ -89,7 +91,7 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-                                    
+
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf

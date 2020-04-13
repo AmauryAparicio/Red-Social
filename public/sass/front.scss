@@ -1,4 +1,13 @@
-.nav-img{
-	width: 50px;
-	margin-left: 10px;
+.nav-img,
+.pub_image img {
+    width: 50px;
+    margin-left: 10px;
+}
+
+.pagination {
+    justify-content: center;
+}
+
+a:hover {
+    text-decoration: none;
 }

@@ -3,9 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            @include('includes.message')
-            @foreach ($images as $image)
+        <div class="col-md-10">
             <div class="card pub_image mb-2">
                 <div class="card-header">
                     <div class="container-avatar">
@@ -47,22 +45,14 @@
                         </a>
                     </div>
                     <div class="description">
-                        <a href=" {{ route('image.detail', ['id' => $image->id]) }} " class="text-dark">
-                            <strong>{{ '@' . $image->user->nick }}</strong>
-                            <span class="mb-0"> "{{ $image->description }}" </span>
-                            <br>
-                        </a>
+                        <strong>{{ '@' . $image->user->nick }}</strong>
+                        <span class="mb-0"> "{{ $image->description }}" </span>
+                        <br>
                         <small> {{ \FormatTime::LongTimeFilter($image->created_at) }}
                         </small>
                     </div>
                 </div>
             </div>
-            @endforeach
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            {{ $images->links() }}
         </div>
     </div>
 </div>

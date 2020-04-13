@@ -3,11 +3,7 @@
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="col-md-8">
-			@if (session('message'))
-					<div class="alert alert-success">
-						{{session('message')}}
-					</div>
-			@endif
+			@include('icludes.message')
 			<div class="card">
 				<div class="card-header">
 					Configuracion de mi cuenta
@@ -15,7 +11,7 @@
 				<div class="card-body">
 					<form action=" {{route('user.update')}} " method="post" enctype="multipart/form-data" aria-label="Configuracion de mi cuenta">
 						@csrf
-	
+
 						<div class="form-group row">
 							<label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
@@ -76,18 +72,18 @@
 						</div>
 
 						<div class="form-group row">
-							
+
 							<label for="image_path" class="col-md-4 col-form-label text-md-right">Avatar</label>
 
 							<div class="col-md-6">
 								<div class="w-75">
 									@include('includes.avatar')
 								</div>
-								
-								
+
+
 								<input id="image_path" type="file" class="form-control-file mt-2 @error('image_path') is-invalid @enderror" name="image_path" autocomplete="image_path" autofocus>
-								
-								
+
+
 								@error('image_path')
 									<span class="invalid-feedback" role="alert">
 										<strong>{{ $message }}</strong>
@@ -104,12 +100,12 @@
 								</button>
 							</div>
 						</div>
-							
+
 					</form>
 				</div>
 			</div>
 		</div>
-		
+
 	</div>
 </div>
 
