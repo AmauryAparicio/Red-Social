@@ -4,6 +4,11 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
+            @include('includes.message')
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-10">
             <div class="card pub_image mb-2">
                 <div class="card-header">
                     <div class="container-avatar">
@@ -22,45 +27,99 @@
                 </div>
                 <div class="card-body">
                     <div class="mb-1">
-                        <a href="#" class="text-dark h4 px-1">
-                            <svg class="bi bi-heart" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 01.176-.17C12.72-3.042 23.333 4.867 8 15z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <svg class="bi bi-heart-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="red"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
+                        @php
+                        $user_like = false;
+                        @endphp
+                        @foreach ($image->likes as $like)
+                        @if ($like->user->id == Auth::user()->id)
+                        @php
+                        $user_like = true;
+                        @endphp
+                        @endif
+                        @endforeach
+                        @if ($user_like)
+                        <img src=" {{ asset('img/heart-red.png') }} " alt="" style="width: 25px" class="btn-dislike"
+                            data-id=" {{ $image->id }} ">
+                        @else
+                        <img src=" {{ asset('img/heart-black.png') }} " alt="" style="width: 25px" class="btn-like"
+                            data-id=" {{ $image->id }} ">
+                        @endif
                     </div>
                     <div class="description">
-                        <strong>{{ '@' . $image->user->nick }}</strong>
+                        <strong>{{ '@' . str_replace(' ', '', $image->user->nick) }}</strong>
                         <span class="mb-0"> "{{ $image->description }}" </span>
                         <br>
                         <small> {{ \FormatTime::LongTimeFilter($image->created_at) }}
                         </small>
+                        @if (Auth::user() && Auth::user()->id == $image->user->id)
+                        <br>
+                        <div class="btn-group btn-group-sm mt-2" role="group">
+                            <a href=" {{ route('image.edit', ['id' => $image->id]) }} " class="btn btn-outline-secondary">Actualizar</a>
+                            <a href="#delModal" data-toggle="modal"
+                                class="btn btn-outline-danger">Borrar</a>
+                        </div>
+                        <div class="modal fade" id="delModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">Borrar imagen</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <h4>Si borras esta imagen, no podras recuperarla y se eliminaran todos los comentarios y me gusta.</h4>
+                                        <p>¿Estas seguro de querer eliminarla?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href=" {{ route('image.delete', ['id' => $image->id]) }} "
+                                            class="btn btn-sm btn-outline-danger">Eliminar definitivamente</a>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            data-dismiss="modal">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <hr>
-                        <p>Comentarios:</p>
+                        <p class="mb-1">Comentarios:</p>
+                        @foreach ($image->comments as $comment)
+                        <hr style="margin: 5px 0 5px 0">
+                        <div class="row">
+                            <div class="pl-3">
+                                <small><strong> {{ '@' . str_replace(' ', '', $comment->user->nick) }} </strong></small>
+                                <small> {{ $comment->content }} </small>
+                            </div>
+                            @if (Auth::check() && ($comment->user_id == Auth::user()->id || $image->user_id ==
+                            Auth::user()->id))
+                            <div class="ml-auto mr-0 col-2">
+                                <a href=" {{ route('comment.delete', ['id' =>$comment->id]) }} "
+                                    class="text-danger">Eliminar</a>
+                            </div>
+                            @endif
+                        </div>
+                        @endforeach
                         <form action=" {{ route('comment.save') }} " method="post">
                             {{ csrf_field() }}
 
                             <input type="hidden" name="image_id" value=" {{ $image->id }} ">
-                            <div class="input-group">
-                                <textarea class="form-control text-dark {{ $errors->has('content') ? 'is-invalid' : '' }}" name="content" rows="1" style="resize: none"
+                            <div class="input-group mt-3">
+                                <textarea
+                                    class="form-control text-dark {{ $errors->has('content') ? 'is-invalid' : '' }}"
+                                    name="content" id="content" rows="1" style="resize: none"
                                     placeholder="Agregar un comentario..."></textarea>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary " type="submit"  id="submit">Publicar</button>
+                                    <button class="btn btn-outline-secondary " type="submit"
+                                        id="submit">Publicar</button>
                                 </div>
-                            </div>
-                            @if ($errors->has('content'))
+
+                                @if ($errors->has('content'))
                                 <div class="invalid-feedback" role="alert">
                                     <strong> {{ $errors->first('content') }} </strong>
                                 </div>
-                            @endif
+                                @endif
+                            </div>
                         </form>
                     </div>
                 </div>

@@ -25,13 +25,13 @@ class ImageController extends Controller
     {
         //Validacion
         $validate = $this->validate($request, [
-            'descripcion' => 'required',
-            'image_path' => 'required|image'
+            'description' => 'required',
+            'image' => 'required|image'
         ]);
 
         //Recoger datos
         $descripcion = $request->descripcion;
-        $image_path = $request->image_path;
+        $image_path = $request->image;
 
         //Asignar valores al nuevo objeto
         $user = Auth::user();
@@ -66,5 +66,56 @@ class ImageController extends Controller
         return view('image.detail', [
             'image' => $image
         ]);
+    }
+
+    public function delete($id)
+    {
+        $user = Auth::user();
+        $image = Image::find($id);
+        if ($user && $image->user->id == $user->id) {
+            $image->delete();
+            $message = 'La imagen se ha borrado existosamente';
+        } else {
+            $message = 'La imagen no se pudo borrar';
+        }
+
+        return redirect()->route('home')->with('message', $message);
+    }
+
+    public function edit($id)
+    {
+        $user = Auth::user();
+        $image = Image::find($id);
+
+        if ($user && $image && $image->user->id == $user->id) {
+            return view('image.edit', ['image' => $image]);
+        } else {
+            return redirect()->route('home');
+        }
+    }
+
+    public function update(request $request)
+    {
+        $image = Image::find($request->id);
+        $description = $request->description;
+        $image_path = $request->image;
+
+        $validate = $this->validate($request, [
+            'description' => 'required',
+            'image' => 'required|image'
+        ]);
+
+        $image->description = $description;
+
+        if ($image_path) {
+            $image_path_name = time() . $image_path->getClientOriginalName();
+            Storage::disk('images')->delete($image->image_path);
+            Storage::disk('images')->put($image_path_name, File::get($image_path));
+            $image->image_path = $image_path_name;
+        }
+
+        $image->update();
+
+        return redirect()->route('image.detail', ['id' => $image->id])->with('message', 'Se actualizo correctamente la imagen');
     }
 }

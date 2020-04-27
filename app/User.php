@@ -39,6 +39,34 @@ class User extends Authenticatable
 
     public function images()
     {
-        return $this->hasMany('App/Images');
+        return $this->hasMany('App\Image')->orderBy('id', 'desc');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany('App\Like');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) { // before delete() method call this
+            $user->likes()->each(function ($likes) {
+                $likes->delete();
+            });
+            $user->images()->each(function ($images) {
+                $images->delete();
+            });
+            $user->comments()->each(function ($comments) {
+                $comments->delete();
+            });
+            // do the rest of the cleanup...
+        });
     }
 }
